@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Irrigation Check</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      text-align: center;
+    }
+    button {
+      font-size: 1.5rem;
+      padding: 1rem 2rem;
+      margin: 1rem;
+      cursor: pointer;
+    }
+    #confirmation {
+      margin-top: 2rem;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <h1>ఈ రోజు మీ పొలానికి సాగు నీరు (తడి) పెట్టారా?</h1>
+  <button onclick="submitResponse('అవును')">Yes</button>
+  <button onclick="submitResponse('లేదు')">No</button>
+
+  <div id="confirmation"></div>
+
+  <script>
+    function getMobileFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('mobile');
+    }
+
+    async function submitResponse(answer) {
+      const mobile = getMobileFromURL();
+      if (!mobile) {
+        alert('Mobile number not found in URL.');
+        return;
+      }
+
+      const response = await 
+      fetch('https://script.google.com/macros/s/AKfycbwIoOwrLdUpzAhV9RKU9actIDWi6XzXKh85IUmHOe9kAGLD-IdKDd_DJC36mQLaIWLy/exec'
+       , {
+        method: 'POST',
+        mode: 'no-cors', // So CORS doesn't block it
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          mobile: mobile,
+          response: answer,
+          timestamp: new Date().toISOString()
+        })
+      });
+
+      document.getElementById('confirmation').textContent = "ధన్యవాదాలు!";
+    }
+  </script>
+</body>
+</html>
